@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students by Course - Attendance System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+        }
+        
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar h1 {
+            color: #667eea;
+            font-size: 24px;
+        }
+        
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .back-btn {
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .course-tabs {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .course-tab {
+            padding: 12px 30px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .course-tab:hover {
+            border-color: #667eea;
+        }
+        
+        .course-tab.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .course-badge {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .course-tab.active .course-badge {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .course-section {
+            display: none;
+        }
+        
+        .course-section.active {
+            display: block;
+        }
+        
+        .course-header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .course-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .course-description {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .course-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .student-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .student-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+        
+        .student-image {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #f0f0f0;
+            border: 4px solid #667eea;
+        }
+        
+        .student-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .student-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        
+        .student-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .student-id {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .student-email {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 15px;
+            word-break: break-word;
+        }
+        
+        .course-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .course-tag.coet {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .course-tag.bit {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .course-tag.ba {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .no-students {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Students by Course</h1>
+        <div class="navbar-right">
+            <a href="{% url 'attendance_dashboard' %}" class="back-btn">Back to Dashboard</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="course-tabs">
+            <div class="course-tab active" onclick="showCourse('COET')">
+                COET
+                <span class="course-badge">{{ coet_count }}</span>
+            </div>
+            <div class="course-tab" onclick="showCourse('BIT')">
+                BIT
+                <span class="course-badge">{{ bit_count }}</span>
+            </div>
+            <div class="course-tab" onclick="showCourse('BA')">
+                BA
+                <span class="course-badge">{{ ba_count }}</span>
+            </div>
+        </div>
+        
+        <!-- COET Section -->
+        <div id="COET" class="course-section active">
+            <div class="course-header">
+                <h2 class="course-title">Computer Engineering and IT (COET)</h2>
+                <p class="course-description">Students enrolled in Computer Engineering and Information Technology program</p>
+                <div class="course-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">{{ coet_count }}</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ coet_active }}</div>
+                        <div class="stat-label">Active Students</div>
+                    </div>
+                </div>
+            </div>
+            
+            <input type="text" class="search-bar" id="searchCOET" placeholder="Search COET students...">
+            
+            <div class="students-grid" id="coetGrid">
+                {% for student in coet_students %}
+                <div class="student-card" data-name="{{ student.full_name|lower }}" data-id="{{ student.student_id|lower }}">
+                    <div class="student-image">
+                        {% with front_image=student.get_front_face_image %}
+                        {% if front_image %}
+                        <img src="{{ front_image.image.url }}" alt="{{ student.full_name }}">
+                        {% else %}
+                        <div class="student-placeholder">{{ student.first_name.0 }}{{ student.last_name.0 }}</div>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div class="student-name">{{ student.full_name }}</div>
+                    <div class="student-id">ID: {{ student.student_id }}</div>
+                    <div class="student-email">{{ student.email }}</div>
+                    <span class="course-tag coet">COET</span>
+                </div>
+                {% empty %}
+                <div class="no-students">No COET students enrolled yet.</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- BIT Section -->
+        <div id="BIT" class="course-section">
+            <div class="course-header">
+                <h2 class="course-title">Business Information Technology (BIT)</h2>
+                <p class="course-description">Students enrolled in Business Information Technology program</p>
+                <div class="course-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">{{ bit_count }}</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ bit_active }}</div>
+                        <div class="stat-label">Active Students</div>
+                    </div>
+                </div>
+            </div>
+            
+            <input type="text" class="search-bar" id="searchBIT" placeholder="Search BIT students...">
+            
+            <div class="students-grid" id="bitGrid">
+                {% for student in bit_students %}
+                <div class="student-card" data-name="{{ student.full_name|lower }}" data-id="{{ student.student_id|lower }}">
+                    <div class="student-image">
+                        {% with front_image=student.get_front_face_image %}
+                        {% if front_image %}
+                        <img src="{{ front_image.image.url }}" alt="{{ student.full_name }}">
+                        {% else %}
+                        <div class="student-placeholder">{{ student.first_name.0 }}{{ student.last_name.0 }}</div>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div class="student-name">{{ student.full_name }}</div>
+                    <div class="student-id">ID: {{ student.student_id }}</div>
+                    <div class="student-email">{{ student.email }}</div>
+                    <span class="course-tag bit">BIT</span>
+                </div>
+                {% empty %}
+                <div class="no-students">No BIT students enrolled yet.</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- BA Section -->
+        <div id="BA" class="course-section">
+            <div class="course-header">
+                <h2 class="course-title">Business Administration (BA)</h2>
+                <p class="course-description">Students enrolled in Business Administration program</p>
+                <div class="course-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">{{ ba_count }}</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ ba_active }}</div>
+                        <div class="stat-label">Active Students</div>
+                    </div>
+                </div>
+            </div>
+            
+            <input type="text" class="search-bar" id="searchBA" placeholder="Search BA students...">
+            
+            <div class="students-grid" id="baGrid">
+                {% for student in ba_students %}
+                <div class="student-card" data-name="{{ student.full_name|lower }}" data-id="{{ student.student_id|lower }}">
+                    <div class="student-image">
+                        {% with front_image=student.get_front_face_image %}
+                        {% if front_image %}
+                        <img src="{{ front_image.image.url }}" alt="{{ student.full_name }}">
+                        {% else %}
+                        <div class="student-placeholder">{{ student.first_name.0 }}{{ student.last_name.0 }}</div>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div class="student-name">{{ student.full_name }}</div>
+                    <div class="student-id">ID: {{ student.student_id }}</div>
+                    <div class="student-email">{{ student.email }}</div>
+                    <span class="course-tag ba">BA</span>
+                </div>
+                {% empty %}
+                <div class="no-students">No BA students enrolled yet.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showCourse(courseCode) {
+            // Hide all sections
+            document.querySelectorAll('.course-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active from all tabs
+            document.querySelectorAll('.course-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(courseCode).classList.add('active');
+            
+            // Activate selected tab
+            event.target.classList.add('active');
+        }
+        
+        // Search functionality for each course
+        function setupSearch(inputId, gridId) {
+            const searchInput = document.getElementById(inputId);
+            const grid = document.getElementById(gridId);
+            
+            if (searchInput && grid) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const cards = grid.querySelectorAll('.student-card');
+                    
+                    cards.forEach(card => {
+                        const name = card.getAttribute('data-name');
+                        const id = card.getAttribute('data-id');
+                        
+                        if (name.includes(searchTerm) || id.includes(searchTerm)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        }
+        
+        setupSearch('searchCOET', 'coetGrid');
+        setupSearch('searchBIT', 'bitGrid');
+        setupSearch('searchBA', 'baGrid');
+    </script>
+</body>
+</html>

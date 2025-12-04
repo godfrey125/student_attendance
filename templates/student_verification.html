@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify {{ student.full_name }} - Attendance System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+        }
+        
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar h1 {
+            color: #667eea;
+            font-size: 24px;
+        }
+        
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .back-btn {
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .back-btn:hover {
+            background: #5568d3;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .student-header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .student-header h1 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .student-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .meta-label {
+            font-weight: 600;
+            color: #999;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .meta-value {
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .verification-section {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .section-description {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .image-container {
+            text-align: center;
+        }
+        
+        .angle-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .image-wrapper {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #f0f0f0;
+            border: 3px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+        
+        .image-wrapper:hover {
+            border-color: #667eea;
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        
+        .no-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .attendance-info {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .attendance-status {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .status-present {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-absent {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .info-value {
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lightbox.active {
+            display: flex;
+        }
+        
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            background: rgba(255,255,255,0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Student Verification Panel</h1>
+        <div class="navbar-right">
+            <a href="{% url 'session_detail' session.id %}" class="back-btn">Back to Session</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="student-header">
+            <h1>{{ student.full_name }}</h1>
+            <div class="student-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Student ID</span>
+                    <span class="meta-value">{{ student.student_id }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Email</span>
+                    <span class="meta-value">{{ student.email }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Session</span>
+                    <span class="meta-value">{{ session.session_name }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Date</span>
+                    <span class="meta-value">{{ session.session_date }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="attendance-info">
+            <div class="section-title">Attendance Status</div>
+            <span class="attendance-status {% if session_log.status == 'present' %}status-present{% else %}status-absent{% endif %}">
+                {{ session_log.status|upper }}
+            </span>
+            
+            {% if session_log.status == 'present' %}
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Recognized At</div>
+                    <div class="info-value">{{ session_log.recognized_at|date:"H:i:s" }}</div>
+                </div>
+                {% if session_log.confidence_score %}
+                <div class="info-item">
+                    <div class="info-label">Confidence Score</div>
+                    <div class="info-value">{{ session_log.confidence_score|floatformat:4 }}</div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="verification-section">
+            <h2 class="section-title">Face Verification - All Angles</h2>
+            <p class="section-description">
+                Review all captured face angles for this student. These images are used for face recognition accuracy but only the front face is displayed in attendance reports.
+            </p>
+            
+            <div class="images-grid">
+                <div class="image-container">
+                    <div class="angle-label">Front Face</div>
+                    <div class="image-wrapper">
+                        {% if angle_images.front %}
+                        <img src="{{ angle_images.front.image.url }}" 
+                             alt="Front Face" 
+                             onclick="openLightbox('{{ angle_images.front.image.url }}')">
+                        {% else %}
+                        <div class="no-image">No front face image</div>
+                        {% endif %}
+                    </div>
+                    {% if angle_images.front %}
+                    <p style="margin-top: 10px; color: #999; font-size: 12px;">
+                        Captured: {{ angle_images.front.captured_at|date:"Y-m-d H:i" }}
+                    </p>
+                    {% endif %}
+                </div>
+                
+                <div class="image-container">
+                    <div class="angle-label">Left Side</div>
+                    <div class="image-wrapper">
+                        {% if angle_images.left %}
+                        <img src="{{ angle_images.left.image.url }}" 
+                             alt="Left Side" 
+                             onclick="openLightbox('{{ angle_images.left.image.url }}')">
+                        {% else %}
+                        <div class="no-image">No left side image</div>
+                        {% endif %}
+                    </div>
+                    {% if angle_images.left %}
+                    <p style="margin-top: 10px; color: #999; font-size: 12px;">
+                        Captured: {{ angle_images.left.captured_at|date:"Y-m-d H:i" }}
+                    </p>
+                    {% endif %}
+                </div>
+                
+                <div class="image-container">
+                    <div class="angle-label">Right Side</div>
+                    <div class="image-wrapper">
+                        {% if angle_images.right %}
+                        <img src="{{ angle_images.right.image.url }}" 
+                             alt="Right Side" 
+                             onclick="openLightbox('{{ angle_images.right.image.url }}')">
+                        {% else %}
+                        <div class="no-image">No right side image</div>
+                        {% endif %}
+                    </div>
+                    {% if angle_images.right %}
+                    <p style="margin-top: 10px; color: #999; font-size: 12px;">
+                        Captured: {{ angle_images.right.captured_at|date:"Y-m-d H:i" }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        {% if session_log.recognized_image %}
+        <div class="verification-section">
+            <h2 class="section-title">Recognition Capture</h2>
+            <p class="section-description">
+                This is the actual frame captured when the student was recognized during the attendance session.
+            </p>
+            
+            <div class="image-container">
+                <div class="image-wrapper" style="max-width: 500px; margin: 0 auto;">
+                    <img src="{{ session_log.recognized_image.url }}" 
+                         alt="Recognition Capture"
+                         onclick="openLightbox('{{ session_log.recognized_image.url }}')">
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightboxImage" src="" alt="Enlarged view">
+    </div>
+    
+    <script>
+        function openLightbox(imageSrc) {
+            document.getElementById('lightbox').classList.add('active');
+            document.getElementById('lightboxImage').src = imageSrc;
+        }
+        
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>

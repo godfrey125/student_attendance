@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enroll Student - Attendance System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+        }
+        
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar h1 {
+            color: #667eea;
+            font-size: 24px;
+        }
+        
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .back-btn {
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .back-btn:hover {
+            background: #5568d3;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .form-header {
+            margin-bottom: 30px;
+        }
+        
+        .form-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .form-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-section {
+            margin-bottom: 35px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .required {
+            color: #e74c3c;
+        }
+        
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .image-upload-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .image-upload-box {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .image-upload-box:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .image-upload-box.has-image {
+            border-color: #27ae60;
+            background: #f0fff4;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        
+        .upload-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .upload-hint {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .preview-image {
+            width: 100%;
+            max-width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 15px auto;
+            display: none;
+        }
+        
+        .image-upload-box.has-image .preview-image {
+            display: block;
+        }
+        
+        .image-upload-box.has-image .upload-icon {
+            display: none;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        
+        .instructions ul {
+            margin-left: 20px;
+            color: #856404;
+            font-size: 14px;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+        
+        .submit-btn, .cancel-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .cancel-btn {
+            background: #e0e0e0;
+            color: #666;
+        }
+        
+        .cancel-btn:hover {
+            background: #d0d0d0;
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 1px solid #fcc;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Enroll Student</h1>
+        <div class="navbar-right">
+            <a href="{% url 'student_list' %}" class="back-btn">Back to Students</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="form-container">
+            <div class="form-header">
+                <h1>Enroll New Student</h1>
+                <p>Add a new student to the attendance system with their face images</p>
+            </div>
+            
+            <div class="instructions">
+                <h3>Face Image Requirements</h3>
+                <ul>
+                    <li>Capture three angles: Front, Left Side, and Right Side</li>
+                    <li>Ensure good lighting and clear visibility of the face</li>
+                    <li>Front face should be looking directly at the camera</li>
+                    <li>Left and right side faces should be 45-degree angles</li>
+                    <li>All three angles are required for enrollment</li>
+                </ul>
+            </div>
+            
+            <div id="errorMessage" style="display: none;" class="error-message"></div>
+            <div id="successMessage" style="display: none;" class="success-message"></div>
+            
+            <form id="enrollForm" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-section">
+                    <div class="section-title">Student Information</div>
+                    
+                    <div class="form-group">
+                        <label for="student_id">Student ID <span class="required">*</span></label>
+                        <input type="text" id="student_id" name="student_id" required placeholder="e.g., S001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="first_name">First Name <span class="required">*</span></label>
+                        <input type="text" id="first_name" name="first_name" required placeholder="John">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="last_name">Last Name <span class="required">*</span></label>
+                        <input type="text" id="last_name" name="last_name" required placeholder="Doe">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required placeholder="john.doe@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="course">Course <span class="required">*</span></label>
+                        <select id="course" name="course" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px;">
+                            <option value="">Select a course</option>
+                            <option value="COET">COET - Computer Engineering and IT</option>
+                            <option value="BIT">BIT - Business Information Technology</option>
+                            <option value="BA">BA - Business Administration</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title">Face Images <span class="required">*</span></div>
+                    
+                    <div class="image-upload-section">
+                        <label for="front_image" class="image-upload-box" id="frontBox">
+                            <div class="upload-icon">📷</div>
+                            <div class="upload-label">Front Face</div>
+                            <div class="upload-hint">Click to upload</div>
+                            <img class="preview-image" id="frontPreview" alt="Front preview">
+                            <input type="file" id="front_image" name="front_image" accept="image/*" required>
+                        </label>
+                        
+                        <label for="left_image" class="image-upload-box" id="leftBox">
+                            <div class="upload-icon">📷</div>
+                            <div class="upload-label">Left Side</div>
+                            <div class="upload-hint">Click to upload</div>
+                            <img class="preview-image" id="leftPreview" alt="Left preview">
+                            <input type="file" id="left_image" name="left_image" accept="image/*" required>
+                        </label>
+                        
+                        <label for="right_image" class="image-upload-box" id="rightBox">
+                            <div class="upload-icon">📷</div>
+                            <div class="upload-label">Right Side</div>
+                            <div class="upload-hint">Click to upload</div>
+                            <img class="preview-image" id="rightPreview" alt="Right preview">
+                            <input type="file" id="right_image" name="right_image" accept="image/*" required>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="{% url 'student_list' %}" class="cancel-btn">Cancel</a>
+                    <button type="submit" class="submit-btn" id="submitBtn">Enroll Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Image preview functionality
+        function setupImagePreview(inputId, previewId, boxId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            const box = document.getElementById(boxId);
+            
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        box.classList.add('has-image');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        setupImagePreview('front_image', 'frontPreview', 'frontBox');
+        setupImagePreview('left_image', 'leftPreview', 'leftBox');
+        setupImagePreview('right_image', 'rightPreview', 'rightBox');
+        
+        // Add camera capture option
+        const useCameraBtn = document.createElement('button');
+        useCameraBtn.type = 'button';
+        useCameraBtn.className = 'submit-btn';
+        useCameraBtn.textContent = 'Use Camera to Capture';
+        useCameraBtn.style.background = '#27ae60';
+        
+        document.querySelector('.form-actions').insertBefore(useCameraBtn, document.getElementById('submitBtn'));
+        
+        useCameraBtn.addEventListener('click', function() {
+            const studentId = document.getElementById('student_id').value;
+            const firstName = document.getElementById('first_name').value;
+            const lastName = document.getElementById('last_name').value;
+            const email = document.getElementById('email').value;
+            const course = document.getElementById('course').value;
+            
+            console.log('Checking fields:', { studentId, firstName, lastName, email, course });
+            
+            if (!studentId || !firstName || !lastName || !email || !course) {
+                alert('Please fill in all student information first, including course selection');
+                return;
+            }
+            
+            // Save student info to localStorage
+            const studentInfo = {
+                student_id: studentId,
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                course: course
+            };
+            
+            console.log('Saving to localStorage:', studentInfo);
+            localStorage.setItem('studentInfo', JSON.stringify(studentInfo));
+            
+            // Redirect to camera capture
+            window.location.href = '{% url "camera_capture" %}';
+        });
+        
+        // Form submission (for file upload option)
+        document.getElementById('enrollForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Hide previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enrolling...';
+            
+            // Create FormData
+            const formData = new FormData(this);
+            
+            // Submit via fetch
+            fetch('{% url "enroll_student" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    successMessage.textContent = data.message;
+                    successMessage.style.display = 'block';
+                    
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '{% url "student_list" %}';
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = Array.isArray(data.error) ? data.error.join(', ') : data.error;
+                    errorMessage.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Enroll Student';
+                }
+            })
+            .catch(error => {
+                errorMessage.textContent = 'An error occurred. Please try again.';
+                errorMessage.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enroll Student';
+            });
+        });
+    </script>
+</body>
+</html>
