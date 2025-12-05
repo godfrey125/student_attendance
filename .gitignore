@@ -1,13 +1,41 @@
-# Django
 *.pyc
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
 db.sqlite3
-/media/
-.env
+db.sqlite3-journal
 
-# VSCode or PyCharm
+# Media files (optional - remove if you want to include student photos)
+media/
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
-# Mac OS
+# OS
 .DS_Store
+Thumbs.db
+
+# Migrations (optional - keep if you want others to use your DB structure)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# Static files
+staticfiles/
+
+# Environment variables
+.env
+*.env
+
+# Logs
+*.log
